@@ -7,7 +7,7 @@ public sealed class Product : EntityBase
     public string Description { get; private set; } = string.Empty;
     public decimal Price { get; private set; }
     public int Stock { get; private set; }
-    public string Image { get; private set; } = string.Empty;
+    public string? Image { get; private set; }
 
     public Product(int id, string name, string description, decimal price, int stock, string image)
     {
@@ -31,13 +31,13 @@ public sealed class Product : EntityBase
         DomainExceptionValidation.When(string.IsNullOrEmpty(name), "Invalid name.Name is required");
         DomainExceptionValidation.When(name.Length < 3, "Name too short, minimum 3 char");
 
-        DomainExceptionValidation.When(string.IsNullOrEmpty(description), "Invalid description.Description is required");
+        DomainExceptionValidation.When(string.IsNullOrEmpty(description), "description.Description is required");
         DomainExceptionValidation.When(description.Length < 5, "Description too short, minimum 5 char");
 
         DomainExceptionValidation.When(price < 0, "Invalid Price Value");
         DomainExceptionValidation.When(stock < 0, "Invalid Stock Value");
 
-        DomainExceptionValidation.When(Image.Length > 250, "Invalid Image Name, minimum 250 char");
+        DomainExceptionValidation.When(image?.Length > 250, "Invalid Image Name, minimum 250 char");
 
         Name = name;
         Description = description;
