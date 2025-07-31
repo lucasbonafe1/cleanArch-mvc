@@ -4,5 +4,5 @@ namespace CleanArch.Domain.Interfaces;
 
 public interface IProductRepository : IBaseRepository<Product>
 {
-    Task<Product> GetProductCategoryAsync(int? id);
+    Task<Product?> GetProductCategoryAsync(int? id);
 }

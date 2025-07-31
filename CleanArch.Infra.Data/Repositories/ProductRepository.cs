@@ -19,13 +19,9 @@ public class ProductRepository(AppDbContext appDbContext) : IProductRepository
 
     public async Task<IEnumerable<Product>> GetAllAsync() => await _appDbContext.Products.ToListAsync();
     
-
     public async Task<Product?> GetByIdAsync(int? id) => await _appDbContext.Products.FindAsync(id);
 
-    public async Task<Product> GetProductCategoryAsync(int? id)
-    {
-        throw new NotImplementedException();
-    }
+    public async Task<Product?> GetProductCategoryAsync(int? id) => await _appDbContext.Products.Include(i => i.Category).FirstOrDefaultAsync(f => f.Id == id);
 
     public async Task<Product> UpdateAsync(Product entity)
     {
