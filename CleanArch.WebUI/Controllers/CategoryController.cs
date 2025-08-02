@@ -1,12 +1,15 @@
-﻿using CleanArch.Application.Interfaces;
+﻿using AutoMapper;
+using CleanArch.Application.Interfaces;
 using CleanArch.Domain.Entities;
+using CleanArch.WebUI.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CleanArch.WebUI.Controllers;
 
-public class CategoryController(ICategoryService categoryService) : Controller
+public class CategoryController(ICategoryService categoryService, IMapper mapper) : Controller
 {
     private readonly ICategoryService _categoryService = categoryService;
+    private readonly IMapper _mapper = mapper;
 
     [HttpGet]
     [Route("")]
@@ -14,16 +17,20 @@ public class CategoryController(ICategoryService categoryService) : Controller
     {
         var entities = await _categoryService.GetAllAsync();
 
-        return Ok(entities);
+        var categories = _mapper.Map<IEnumerable<CategoryResponseModel>>(entities);
+
+        return Ok(categories);
     }
 
     [HttpGet]
     [Route("{id}")]
-    public async Task<ActionResult> GetAllProducts(int? id)
+    public async Task<ActionResult> GetByIdAsync(int? id)
     {
         var entity = await _categoryService.GetByIdAsync(id);
 
-        return Ok(entity);
+        var category = _mapper.Map<CategoryResponseModel>(entity);
+
+        return Ok(category);
     }
 
     [HttpPost]
@@ -50,6 +57,8 @@ public class CategoryController(ICategoryService categoryService) : Controller
     {
         var entity = await _categoryService.DeleteAsync(id);
 
-        return Ok(entity);
+        var category = _mapper.Map<CategoryResponseModel>(entity);
+
+        return Ok(category);
     }
 }
