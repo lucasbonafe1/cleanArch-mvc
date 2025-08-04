@@ -1,10 +1,9 @@
 ﻿using AutoMapper;
 using CleanArch.Application.Interfaces;
 using CleanArch.Domain.Entities;
-using CleanArch.WebUI.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CleanArch.WebUI.Controllers;
+namespace CleanArch.API.Controllers;
 
 public class ProductController(IProductService productService, IMapper mapper) : Controller
 {
@@ -17,9 +16,7 @@ public class ProductController(IProductService productService, IMapper mapper) :
     {
         var entities = await _productService.GetAllAsync();
 
-        var products = _mapper.Map<IEnumerable<ProductResponseModel>>(entities);
-
-        return Ok(products);
+        return Ok(entities);
     }
 
     [HttpGet]
@@ -28,9 +25,7 @@ public class ProductController(IProductService productService, IMapper mapper) :
     {
         var entity = await _productService.GetByIdAsync(id);
 
-        var product = _mapper.Map<ProductResponseModel>(entity);
-
-        return Ok(product);
+        return Ok(entity);
     }
 
     [HttpGet]
@@ -39,9 +34,7 @@ public class ProductController(IProductService productService, IMapper mapper) :
     {
         var entity = await _productService.GetProductCategoryAsync(id);
 
-        var product = _mapper.Map<ProductResponseModel>(entity);
-
-        return Ok(product);
+        return Ok(entity);
     }
 
     [HttpPost]
@@ -50,9 +43,7 @@ public class ProductController(IProductService productService, IMapper mapper) :
     {
         var entity = await _productService.CreateAsync(product);
 
-        var productMapped = _mapper.Map<ProductResponseModel>(entity);
-
-        return Ok(productMapped);
+        return Ok(entity);
     }
 
     [HttpPut]
@@ -60,8 +51,6 @@ public class ProductController(IProductService productService, IMapper mapper) :
     public async Task<ActionResult> UpdateAsync(int id)
     {
         var entity = await _productService.UpdateAsync(id);
-
-        var productMapped = _mapper.Map<ProductResponseModel>(entity);
 
         return Ok(entity);
     }
