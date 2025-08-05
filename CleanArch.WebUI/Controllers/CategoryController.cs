@@ -12,25 +12,22 @@ public class CategoryController(ICategoryService categoryService, IMapper mapper
     private readonly IMapper _mapper = mapper;
 
     [HttpGet]
-    [Route("")]
-    public async Task<ActionResult> GetAllProducts()
+    public async Task<ActionResult> Index()
     {
         var entities = await _categoryService.GetAllAsync();
 
-        var categories = _mapper.Map<IEnumerable<CategoryResponseModel>>(entities);
-
-        return Ok(categories);
+        return View(entities);
     }
 
     [HttpGet]
     [Route("{id}")]
     public async Task<ActionResult> GetByIdAsync(int? id)
     {
-        var entity = await _categoryService.GetByIdAsync(id);
+        var category = await _categoryService.GetByIdAsync(id);
 
-        var category = _mapper.Map<CategoryResponseModel>(entity);
+        var categoryMapped = _mapper.Map<CategoryResponseModel>(category);
 
-        return Ok(category);
+        return Ok(categoryMapped);
     }
 
     [HttpPost]
