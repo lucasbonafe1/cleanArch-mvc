@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CleanArch.Application.DTOs;
+using CleanArch.Application.Products.Commands;
 using CleanArch.Domain.Entities;
 
 namespace CleanArch.Application.Mapper
@@ -8,6 +9,7 @@ namespace CleanArch.Application.Mapper
     {
         public AutoMapper()
         {
+            // Product
             CreateMap<Product, ProductDTO>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.NameCategory, opt => opt.MapFrom(src => src.Name))
@@ -16,6 +18,11 @@ namespace CleanArch.Application.Mapper
                 .ForMember(dest => dest.NameCategory, opt => opt.MapFrom(src => src.Category.Name))
                 .ReverseMap();
 
+            CreateMap<ProductDTO, ProductCreateCommand>();
+            CreateMap<ProductDTO, ProductUpdateCommand>();
+
+
+            // Category
             CreateMap<Category, CategoryDTO>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
