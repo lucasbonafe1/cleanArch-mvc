@@ -18,8 +18,8 @@ namespace CleanArch.Application.Mapper
                 .ForMember(dest => dest.NameCategory, opt => opt.MapFrom(src => src.Category.Name))
                 .ReverseMap();
 
-            CreateMap<ProductDTO, ProductCreateCommand>();
-            CreateMap<ProductDTO, ProductUpdateCommand>();
+            CreateMap<ProductDTO, ProductCreateCommand>().ReverseMap();
+            CreateMap<ProductDTO, ProductUpdateCommand>().ReverseMap();
 
 
             // Category
