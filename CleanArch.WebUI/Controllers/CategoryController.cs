@@ -16,46 +16,48 @@ public class CategoryController(ICategoryService categoryService, IMapper mapper
     {
         var entities = await _categoryService.GetAllAsync();
 
-        return View(entities);
+        var categories = _mapper.Map<IEnumerable<CategoryResponseModel>>(entities);
+
+        return View(categories);
     }
 
-    [HttpGet]
-    [Route("{id}")]
-    public async Task<ActionResult> GetByIdAsync(int? id)
-    {
-        var category = await _categoryService.GetByIdAsync(id);
+    //[HttpGet]
+    //[Route("{id}")]
+    //public async Task<ActionResult> GetByIdAsync(int? id)
+    //{
+    //    var category = await _categoryService.GetByIdAsync(id);
 
-        var categoryMapped = _mapper.Map<CategoryResponseModel>(category);
+    //    var categoryMapped = _mapper.Map<CategoryResponseModel>(category);
 
-        return Ok(categoryMapped);
-    }
+    //    return Ok(categoryMapped);
+    //}
 
-    [HttpPost]
-    [Route("")]
-    public async Task<ActionResult> CreateAsync(Category category)
-    {
-        var entity = await _categoryService.CreateAsync(category);
+    //[HttpPost]
+    //[Route("")]
+    //public async Task<ActionResult> CreateAsync(Category category)
+    //{
+    //    var entity = await _categoryService.CreateAsync(category);
 
-        return Ok(entity);
-    }
+    //    return Ok(entity);
+    //}
 
-    [HttpPut]
-    [Route("")]
-    public async Task<ActionResult> UpdateAsync(int id)
-    {
-        var entity = await _categoryService.UpdateAsync(id);
+    //[HttpPut]
+    //[Route("")]
+    //public async Task<ActionResult> UpdateAsync(int id)
+    //{
+    //    var entity = await _categoryService.UpdateAsync(id);
 
-        return Ok(entity);
-    }
+    //    return Ok(entity);
+    //}
 
-    [HttpPut]
-    [Route("hard-delete")]
-    public async Task<ActionResult> DeleteAsync(int id)
-    {
-        var entity = await _categoryService.DeleteAsync(id);
+    //[HttpPut]
+    //[Route("hard-delete")]
+    //public async Task<ActionResult> DeleteAsync(int id)
+    //{
+    //    var entity = await _categoryService.DeleteAsync(id);
 
-        var category = _mapper.Map<CategoryResponseModel>(entity);
+    //    var category = _mapper.Map<CategoryResponseModel>(entity);
 
-        return Ok(category);
-    }
+    //    return Ok(category);
+    //}
 }

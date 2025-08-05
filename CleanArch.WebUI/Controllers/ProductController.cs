@@ -12,66 +12,65 @@ public class ProductController(IProductService productService, IMapper mapper) :
     private readonly IMapper _mapper = mapper;
 
     [HttpGet]
-    [Route("")]
-    public async Task<ActionResult> GetAllProducts()
+    public async Task<ActionResult> Index()
     {
         var entities = await _productService.GetAllAsync();
 
         var products = _mapper.Map<IEnumerable<ProductResponseModel>>(entities);
 
-        return Ok(products);
+        return View(products);
     }
 
-    [HttpGet]
-    [Route("{id}")]
-    public async Task<ActionResult> GetAllProducts(int? id)
-    {
-        var entity = await _productService.GetByIdAsync(id);
+    //[HttpGet]
+    //[Route("{id}")]
+    //public async Task<ActionResult> GetById(int? id)
+    //{
+    //    var entity = await _productService.GetByIdAsync(id);
 
-        var product = _mapper.Map<ProductResponseModel>(entity);
+    //    var product = _mapper.Map<ProductResponseModel>(entity);
 
-        return Ok(product);
-    }
+    //    return Ok(product);
+    //}
 
-    [HttpGet]
-    [Route("product-and-categories/{id}")]
-    public async Task<ActionResult> GetProductWithCategoryAsync(int? id)
-    {
-        var entity = await _productService.GetProductCategoryAsync(id);
+    //[HttpGet]
+    //[Route("product-and-categories/{id}")]
+    //public async Task<ActionResult> GetProductWithCategoryAsync(int? id)
+    //{
+    //    var entity = await _productService.GetProductCategoryAsync(id);
 
-        var product = _mapper.Map<ProductResponseModel>(entity);
+    //    var product = _mapper.Map<ProductResponseModel>(entity);
 
-        return Ok(product);
-    }
+    //    return Ok(product);
+    //}
 
-    [HttpPost]
-    [Route("")]
-    public async Task<ActionResult> CreateAsync(Product product)
-    {
-        var entity = await _productService.CreateAsync(product);
+    //[HttpPost]
+    //[Route("")]
+    //public async Task<ActionResult> CreateAsync(Product product)
+    //{
+    //    var entity = await _productService.CreateAsync(product);
 
-        var productMapped = _mapper.Map<ProductResponseModel>(entity);
+    //    var productMapped = _mapper.Map<ProductResponseModel>(entity);
 
-        return Ok(productMapped);
-    }
+    //    return Ok(productMapped);
+    //}
 
-    [HttpPut]
-    [Route("")]
-    public async Task<ActionResult> UpdateAsync(int id)
-    {
-        var entity = await _productService.UpdateAsync(id);
+    //[HttpPut]
+    //[Route("")]
+    //public async Task<ActionResult> UpdateAsync(int id)
+    //{
+    //    var entity = await _productService.UpdateAsync(id);
 
-        var productMapped = _mapper.Map<ProductResponseModel>(entity);
+    //    var productMapped = _mapper.Map<ProductResponseModel>(entity);
 
-        return Ok(entity);
-    }
+    //    return Ok(entity);
+    //}
 
-    [HttpPut]
-    [Route("hard-delete")]
-    public async Task<ActionResult> DeleteAsync(int id)
-    {
-        var entity = await _productService.DeleteAsync(id);
+    //[HttpPut]
+    //[Route("hard-delete")]
+    //public async Task<ActionResult> DeleteAsync(int id)
+    //{
+    //    var entity = await _productService.DeleteAsync(id);
 
-        return Ok(entity);
-    }
+    //    return Ok(entity);
+    //}
 }
