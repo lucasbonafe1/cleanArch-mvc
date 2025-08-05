@@ -1,8 +1,9 @@
-﻿using CleanArch.Domain.Entities;
+﻿using CleanArch.Application.DTOs;
+using CleanArch.Domain.Entities;
 
 namespace CleanArch.Application.Interfaces;
 
-public interface IProductService : IBaseService<Product>
+public interface IProductService : IBaseService<ProductDTO>
 {
-    Task<Product?> GetProductCategoryAsync(int? id);
+    Task<ProductDTO?> GetProductCategoryAsync(int? id);
 }

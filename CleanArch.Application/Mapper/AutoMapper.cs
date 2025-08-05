@@ -13,11 +13,13 @@ namespace CleanArch.Application.Mapper
                 .ForMember(dest => dest.NameCategory, opt => opt.MapFrom(src => src.Name))
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
                 .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Price))
-                .ForMember(dest => dest.NameCategory, opt => opt.MapFrom(src => src.Category.Name));
+                .ForMember(dest => dest.NameCategory, opt => opt.MapFrom(src => src.Category.Name))
+                .ReverseMap();
 
             CreateMap<Category, CategoryDTO>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name));
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
+                .ReverseMap();
         }
     }
 }
