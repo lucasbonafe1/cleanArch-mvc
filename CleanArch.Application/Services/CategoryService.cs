@@ -21,7 +21,7 @@ public class CategoryService : ICategoryService
         throw new NotImplementedException();
     }
 
-    public Task<Category?> GetByIdAsync(int? id)
+    public Task<Category?> GetByIdAsync(int id)
     {
         throw new NotImplementedException();
     }
