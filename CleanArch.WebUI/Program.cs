@@ -1,4 +1,5 @@
 using CleanArch.Application.Interfaces;
+using CleanArch.Application.Products.Handlers;
 using CleanArch.Application.Services;
 using CleanArch.Domain.Interfaces;
 using CleanArch.Infra.Data.Context;
@@ -23,7 +24,8 @@ builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IProductService, ProductService>();
-builder.Services.AddMediatR(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddMediatR(typeof(GetProductsQueryHandler).Assembly);
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())

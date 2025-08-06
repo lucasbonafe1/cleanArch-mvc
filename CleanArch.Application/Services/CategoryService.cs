@@ -1,33 +1,66 @@
-﻿using CleanArch.Application.Interfaces;
-using CleanArch.Domain.Entities;
+﻿using AutoMapper;
+using CleanArch.Application.Categories.Commands;
+using CleanArch.Application.Categories.Queries;
+using CleanArch.Application.DTOs;
+using CleanArch.Application.Interfaces;
+using MediatR;
 
 namespace CleanArch.Application.Services;
 
 public class CategoryService : ICategoryService
 {
-    //colocar no padrão cqrs
-    public Task CreateAsync(Category entity)
+    private readonly IMapper _mapper;
+    private readonly IMediator _mediator;
+
+    public CategoryService(IMapper mapper, IMediator mediator)
     {
-        throw new NotImplementedException();
+        _mapper = mapper;
+        _mediator = mediator;
     }
 
-    public Task DeleteAsync(int id)
+    public async Task<IEnumerable<CategoryDTO>> GetAllAsync()
     {
-        throw new NotImplementedException();
+        var categoriesQuery = new GetCategoriesQuery();
+
+        var result = await _mediator.Send(categoriesQuery);
+
+        return _mapper.Map<IEnumerable<CategoryDTO>>(result);
     }
 
-    public Task<IEnumerable<Category>> GetAllAsync()
+    public async Task<CategoryDTO?> GetByIdAsync(int id)
     {
-        throw new NotImplementedException();
+        var categoryByIdQuery = new GetCategoryByIdQuery(id);
+
+        var result = await _mediator.Send(categoryByIdQuery);
+
+        return _mapper.Map<CategoryDTO>(result);
     }
 
-    public Task<Category?> GetByIdAsync(int id)
+    public async Task CreateAsync(CategoryDTO categoryDto)
     {
-        throw new NotImplementedException();
+        var categoryCreateCommand = _mapper.Map<CategoryCreateCommand>(categoryDto);
+        await _mediator.Send(categoryCreateCommand);
     }
 
-    public Task<Category> UpdateAsync(int id)
+    public async Task<CategoryDTO> UpdateAsync(int id)
     {
-        throw new NotImplementedException();
+        var categoryByIdQuery = new GetCategoryByIdQuery(id);
+
+        if (categoryByIdQuery == null)
+            throw new Exception($"Entity could not be loaded.");
+
+        var categoryUpdateCommand = _mapper.Map<CategoryUpdateCommand>(categoryByIdQuery);
+        await _mediator.Send(categoryUpdateCommand);
+
+        return _mapper.Map<CategoryDTO>(categoryUpdateCommand);
+    }
+
+    public async Task DeleteAsync(int id)
+    {
+        var categoryRemoveCommand = new CategoryRemoveCommand(id);
+        if (categoryRemoveCommand == null)
+            throw new Exception($"Entity could not be loaded.");
+
+        await _mediator.Send(categoryRemoveCommand);
     }
 }

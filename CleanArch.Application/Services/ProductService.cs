@@ -14,22 +14,16 @@ namespace CleanArch.Application.Services
 
         public async Task<IEnumerable<ProductDTO>> GetAllAsync()
         {
-            var productsQuery = new GetProductsQuery();
-
-            if (productsQuery == null)
-                throw new Exception($"Entity could not be loaded.");
+            var productsQuery = new GetProductQuery();
 
             var result = await _mediator.Send(productsQuery);
 
-            return _mapper.Map<IEnumerable<ProductDTO>>(result);
+            return _mapper.Map<IEnumerable<ProductDTO>>(result) ?? [];
         }
 
-        public async Task<ProductDTO> GetByIdAsync(int id)
+        public async Task<ProductDTO?> GetByIdAsync(int id)
         {
             var productByIdQuery = new GetProductByIdQuery(id);
-
-            if (productByIdQuery == null)
-                throw new Exception($"Entity could not be loaded.");
 
             var result = await _mediator.Send(productByIdQuery);
 

@@ -3,7 +3,7 @@ using CleanArch.Domain.Entities;
 using CleanArch.Domain.Interfaces;
 using MediatR;
 
-namespace CleanArchMvc.Application.Products.Handlers
+namespace CleanArch.Application.Products.Handlers
 {
     public class ProductUpdateCommandHandler(IProductRepository productRepository) : IRequestHandler<ProductUpdateCommand, Product>
     {

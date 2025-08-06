@@ -2,11 +2,8 @@
 using CleanArch.Domain.Entities;
 using CleanArch.Domain.Interfaces;
 using MediatR;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace CleanArchMvc.Application.Products.Handlers;
+namespace CleanArch.Application.Products.Handlers;
 
 public class ProductRemoveCommandHandler(IProductRepository productRepository) : IRequestHandler<ProductRemoveCommand, Product>
 {

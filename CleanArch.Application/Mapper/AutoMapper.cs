@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CleanArch.Application.Categories.Commands;
 using CleanArch.Application.DTOs;
 using CleanArch.Application.Products.Commands;
 using CleanArch.Domain.Entities;
@@ -27,6 +28,9 @@ namespace CleanArch.Application.Mapper
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
                 .ReverseMap();
+
+            CreateMap<CategoryDTO, CategoryCreateCommand>().ReverseMap();
+            CreateMap<CategoryDTO, CategoryUpdateCommand>().ReverseMap();
         }
     }
 }
