@@ -1,14 +1,18 @@
 ﻿using AutoMapper;
+using CleanArch.Application.DTOs;
 using CleanArch.Application.Interfaces;
 using CleanArch.Domain.Entities;
 using CleanArch.WebUI.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CleanArch.WebUI.Controllers;
 
-public class ProductController(IProductService productService, IMapper mapper) : Controller
+public class ProductController(IProductService productService, IMapper mapper, ICategoryService categoryService, IWebHostEnvironment environment) : Controller
 {
     private readonly IProductService _productService = productService;
+    private readonly ICategoryService _categoryService = categoryService;
+    private readonly IWebHostEnvironment _environment = environment;
     private readonly IMapper _mapper = mapper;
 
     [HttpGet]
@@ -21,56 +25,89 @@ public class ProductController(IProductService productService, IMapper mapper) :
         return View(products);
     }
 
-    //[HttpGet]
-    //[Route("{id}")]
-    //public async Task<ActionResult> GetById(int? id)
-    //{
-    //    var entity = await _productService.GetByIdAsync(id);
+    [HttpGet()]
+    public async Task<ActionResult> Create()
+    {
+        ViewBag.CategoryId =
+            new SelectList(await _categoryService.GetAllAsync(), "Id", "Name");
+        return View();
+    }
 
-    //    var product = _mapper.Map<ProductResponseModel>(entity);
+    [HttpPost]
+    public async Task<ActionResult> Create(ProductDTO productDTO)
+    {
+        if (ModelState.IsValid)
+        {
+            await _productService.CreateAsync(productDTO);
+            return RedirectToAction(nameof(Index));
+        }
 
-    //    return Ok(product);
-    //}
+        return View(productDTO);
+    }
 
-    //[HttpGet]
-    //[Route("product-and-categories/{id}")]
-    //public async Task<ActionResult> GetProductWithCategoryAsync(int? id)
-    //{
-    //    var entity = await _productService.GetProductCategoryAsync(id);
+    [HttpGet()]
+    public async Task<ActionResult> Edit(int id)
+    {
+        var productDto = await _productService.GetByIdAsync(id);
 
-    //    var product = _mapper.Map<ProductResponseModel>(entity);
+        ViewBag.CategoryId =
+            new SelectList(await _categoryService.GetAllAsync(), "Id", "Name", productDto.CategoryId);
 
-    //    return Ok(product);
-    //}
+        return View(productDto);
+    }
 
-    //[HttpPost]
-    //[Route("")]
-    //public async Task<ActionResult> CreateAsync(Product product)
-    //{
-    //    var entity = await _productService.CreateAsync(product);
+    [HttpPost]
+    public async Task<ActionResult> Edit(ProductDTO productDTO)
+    {
+        if (ModelState.IsValid)
+        {
+            await _productService.UpdateAsync(productDTO);
+            return RedirectToAction(nameof(Index));
+        }
 
-    //    var productMapped = _mapper.Map<ProductResponseModel>(entity);
+        return View(productDTO);
+    }
 
-    //    return Ok(productMapped);
-    //}
+    [HttpGet()]
+    public async Task<ActionResult> Delete(ProductDTO productDto)
+    {
+        if (ModelState.IsValid)
+        {
+            try
+            {
+                await _productService.DeleteAsync(productDto.Id);
+            }
+            catch (Exception)
+            {
+                return NotFound();
+            }
 
-    //[HttpPut]
-    //[Route("")]
-    //public async Task<ActionResult> UpdateAsync(int id)
-    //{
-    //    var entity = await _productService.UpdateAsync(id);
+            return RedirectToAction(nameof(Index));
+        }
 
-    //    var productMapped = _mapper.Map<ProductResponseModel>(entity);
+        return View(productDto);
+    }
 
-    //    return Ok(entity);
-    //}
+    [HttpPost(), ActionName(nameof(Delete))]
+    public async Task<ActionResult> DeleteConfirmed(int id)
+    {
+        await _productService.DeleteAsync(id);
 
-    //[HttpPut]
-    //[Route("hard-delete")]
-    //public async Task<ActionResult> DeleteAsync(int id)
-    //{
-    //    var entity = await _productService.DeleteAsync(id);
+        return RedirectToAction(nameof(Index));
+    }
 
-    //    return Ok(entity);
-    //}
+    public async Task<IActionResult> Details(int id)
+    {
+        var entity = await _productService.GetByIdAsync(id);
+
+        if (entity == null)
+            return NotFound();
+
+        var wwwroot = _environment.WebRootPath;
+        var image = Path.Combine(wwwroot, "images\\" + entity.Image);
+        var exists = System.IO.File.Exists(image);
+        ViewBag.ImageExist = exists;
+
+        return View(entity);
+    }
 }
