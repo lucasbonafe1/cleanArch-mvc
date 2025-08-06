@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CleanArch.Application.DTOs;
 using CleanArch.Application.Interfaces;
 using CleanArch.Domain.Entities;
 using CleanArch.WebUI.Models;
@@ -21,43 +22,90 @@ public class CategoryController(ICategoryService categoryService, IMapper mapper
         return View(categories);
     }
 
-    //[HttpGet]
-    //[Route("{id}")]
-    //public async Task<ActionResult> GetByIdAsync(int? id)
-    //{
-    //    var category = await _categoryService.GetByIdAsync(id);
+    [HttpGet()]
+    public ActionResult Create()
+    {
+        return View();
+    }
 
-    //    var categoryMapped = _mapper.Map<CategoryResponseModel>(category);
+    [HttpPost]
+    public async Task<ActionResult> CreateAsync(CategoryDTO category)
+    {
+        if (ModelState.IsValid)
+        {
+            await _categoryService.CreateAsync(category);
+            return RedirectToAction(nameof(Index));
+        }
 
-    //    return Ok(categoryMapped);
-    //}
+        return View(category);
+    }
 
-    //[HttpPost]
-    //[Route("")]
-    //public async Task<ActionResult> CreateAsync(Category category)
-    //{
-    //    var entity = await _categoryService.CreateAsync(category);
+    [HttpGet()]
+    public async Task<ActionResult> Edit(int id)
+    {
+        var entity = await _categoryService.GetByIdAsync(id);
 
-    //    return Ok(entity);
-    //}
+        if (entity == null)
+            return NotFound();
 
-    //[HttpPut]
-    //[Route("")]
-    //public async Task<ActionResult> UpdateAsync(int id)
-    //{
-    //    var entity = await _categoryService.UpdateAsync(id);
+        return View(entity);
+    }
 
-    //    return Ok(entity);
-    //}
+    [HttpPost()]
+    public async Task<ActionResult> Edit(CategoryDTO category)
+    {
+        if (ModelState.IsValid)
+        {
+            try
+            {
+                await _categoryService.UpdateAsync(category);
+            }
+            catch (Exception)
+            {
+                return NotFound();
+            }
 
-    //[HttpPut]
-    //[Route("hard-delete")]
-    //public async Task<ActionResult> DeleteAsync(int id)
-    //{
-    //    var entity = await _categoryService.DeleteAsync(id);
+            return RedirectToAction(nameof(Index));
+        }
 
-    //    var category = _mapper.Map<CategoryResponseModel>(entity);
+        return View(category);
+    }
 
-    //    return Ok(category);
-    //}
+    [HttpGet()]
+    public async Task<ActionResult> Delete(CategoryDTO categoryDTO)
+    {
+        if (ModelState.IsValid)
+        {
+            try
+            {
+                await _categoryService.DeleteAsync(categoryDTO.Id);
+            }
+            catch (Exception)
+            {
+                return NotFound();
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        return View(categoryDTO);
+    }
+
+    [HttpPost(), ActionName(nameof(Delete))]
+    public async Task<ActionResult> DeleteConfirmed(int id)
+    {
+        await _categoryService.DeleteAsync(id);
+
+        return RedirectToAction(nameof(Index));
+    }
+
+    public async Task<IActionResult> Details(int id)
+    {
+        var entity = await _categoryService.GetByIdAsync(id);
+
+        if (entity == null)
+            return NotFound();
+
+        return View(entity);
+    }
 }

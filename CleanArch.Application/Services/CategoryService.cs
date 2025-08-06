@@ -42,17 +42,13 @@ public class CategoryService : ICategoryService
         await _mediator.Send(categoryCreateCommand);
     }
 
-    public async Task<CategoryDTO> UpdateAsync(int id)
+    public async Task UpdateAsync(CategoryDTO categoryDto)
     {
-        var categoryByIdQuery = new GetCategoryByIdQuery(id);
-
-        if (categoryByIdQuery == null)
+        if (categoryDto == null)
             throw new Exception($"Entity could not be loaded.");
 
-        var categoryUpdateCommand = _mapper.Map<CategoryUpdateCommand>(categoryByIdQuery);
+        var categoryUpdateCommand = _mapper.Map<CategoryUpdateCommand>(categoryDto);
         await _mediator.Send(categoryUpdateCommand);
-
-        return _mapper.Map<CategoryDTO>(categoryUpdateCommand);
     }
 
     public async Task DeleteAsync(int id)

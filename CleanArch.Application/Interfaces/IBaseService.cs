@@ -6,6 +6,6 @@ public interface IBaseService<T> where T : class
     Task<T?> GetByIdAsync(int id);
 
     Task CreateAsync(T entity);
-    Task<T> UpdateAsync(int id);
+    Task UpdateAsync(T entity);
     Task DeleteAsync(int id);
 }

@@ -36,17 +36,13 @@ namespace CleanArch.Application.Services
             await _mediator.Send(productCreateCommand);
         }
 
-        public async Task<ProductDTO> UpdateAsync(int id)
+        public async Task UpdateAsync(ProductDTO productDto)
         {
-            var productByIdQuery = new GetProductByIdQuery(id);
-
-            if (productByIdQuery == null)
+            if (productDto == null)
                 throw new Exception($"Entity could not be loaded.");
 
-            var productUpdateCommand = _mapper.Map<ProductUpdateCommand>(productByIdQuery);
+            var productUpdateCommand = _mapper.Map<ProductUpdateCommand>(productDto);
             await _mediator.Send(productUpdateCommand);
-
-            return _mapper.Map<ProductDTO>(productUpdateCommand);
         }
 
         public async Task DeleteAsync(int id)
