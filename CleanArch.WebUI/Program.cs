@@ -1,30 +1,35 @@
-using CleanArch.Application.Interfaces;
-using CleanArch.Application.Products.Handlers;
-using CleanArch.Application.Services;
-using CleanArch.Domain.Interfaces;
 using CleanArch.Infra.Data.Context;
+using CleanArch.Infra.Data.Identity;
+using Microsoft.AspNetCore.Identity;
+using CleanArch.Infra.IoC;
+using CleanArch.Application.Interfaces;
+using CleanArch.Application.Services;
+using CleanArch.Domain.Account;
+using CleanArch.Domain.Interfaces;
 using CleanArch.Infra.Data.Repositories;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using System.Reflection;
+using CleanArch.WebUI.AuthService;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddDbContext<AppDbContext>(options =>
-                        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
-                            b => b.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName)));
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<AppDbContext>()
+    .AddDefaultTokenProviders();
 
-builder.Services.AddAutoMapper(cfg => {}, AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.ConfigureApplicationCookie(options =>
+    options.AccessDeniedPath = "/Account/AccessDenied"
+);
 
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IProductService, ProductService>();
-builder.Services.AddMediatR(typeof(GetProductsQueryHandler).Assembly);
+
+builder.Services.AddScoped<IAuthenticate, AuthenticateService>();
+builder.Services.AddScoped<ISeedUserRoleInitial, SeedUserRoleInitial>();
+
+builder.Services.AddInfrastructure(builder.Configuration);
 
 var app = builder.Build();
 
