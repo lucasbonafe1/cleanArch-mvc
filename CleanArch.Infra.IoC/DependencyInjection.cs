@@ -1,12 +1,5 @@
-﻿using CleanArch.Application.Interfaces;
-using CleanArch.Application.Products.Handlers;
-using CleanArch.Application.Services;
-using CleanArch.Application.Services.Auth;
-using CleanArch.Domain.Account;
-using CleanArch.Domain.Interfaces;
+﻿using CleanArch.Application.Products.Handlers;
 using CleanArch.Infra.Data.Context;
-using CleanArch.Infra.Data.Identity;
-using CleanArch.Infra.Data.Repositories;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
