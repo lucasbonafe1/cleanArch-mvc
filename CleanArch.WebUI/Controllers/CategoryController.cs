@@ -3,10 +3,12 @@ using CleanArch.Application.DTOs;
 using CleanArch.Application.Interfaces;
 using CleanArch.Domain.Entities;
 using CleanArch.WebUI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CleanArch.WebUI.Controllers;
 
+[Authorize]
 public class CategoryController(ICategoryService categoryService, IMapper mapper) : Controller
 {
     private readonly ICategoryService _categoryService = categoryService;

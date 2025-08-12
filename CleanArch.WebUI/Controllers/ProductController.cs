@@ -3,6 +3,7 @@ using CleanArch.Application.DTOs;
 using CleanArch.Application.Interfaces;
 using CleanArch.Domain.Entities;
 using CleanArch.WebUI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -68,6 +69,7 @@ public class ProductController(IProductService productService, IMapper mapper, I
         return View(productDTO);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpGet()]
     public async Task<ActionResult> Delete(ProductDTO productDto)
     {

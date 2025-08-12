@@ -1,13 +1,18 @@
-using CleanArch.Infra.Data.Context;
-using CleanArch.Infra.Data.Identity;
-using Microsoft.AspNetCore.Identity;
-using CleanArch.Infra.IoC;
 using CleanArch.Application.Interfaces;
+using CleanArch.Application.Products.Handlers;
 using CleanArch.Application.Services;
 using CleanArch.Domain.Account;
 using CleanArch.Domain.Interfaces;
+using CleanArch.Infra.Data.Context;
+using CleanArch.Infra.Data.Identity;
 using CleanArch.Infra.Data.Repositories;
+using CleanArch.Infra.IoC;
 using CleanArch.WebUI.AuthService;
+using MediatR;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,24 +34,35 @@ builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IAuthenticate, AuthenticateService>();
 builder.Services.AddScoped<ISeedUserRoleInitial, SeedUserRoleInitial>();
 
-builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddDbContext<AppDbContext>(options =>
+                options.UseSqlServer(
+                    builder.Configuration.GetConnectionString("DefaultConnection"),
+                    b => b.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName)));
+
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+builder.Services.AddMediatR(typeof(GetProductsQueryHandler).Assembly);
 
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
-{
     app.UseDeveloperExceptionPage(); // Para mostrar erros no navegador
-}
 else
-{
     app.UseHsts();
-}
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
 
+using (var scope = app.Services.CreateScope())
+{
+    var seedUserRoleInitial = scope.ServiceProvider.GetRequiredService<ISeedUserRoleInitial>();
+    seedUserRoleInitial.SeedRoles();
+    seedUserRoleInitial.SeedUsers();
+}
+
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
