@@ -1,8 +1,9 @@
 ﻿using CleanArch.Domain.Account;
 using CleanArch.Infra.Data.Identity;
+using CleanArch.WebUI.Domain.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 
-namespace CleanArch.WebUI.AuthService;
+namespace CleanArch.WebUI.Domain.Services.Auth;
 
 public class AuthenticateService : IAuthenticate
 {

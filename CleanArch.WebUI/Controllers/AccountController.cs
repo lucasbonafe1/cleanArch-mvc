@@ -1,4 +1,4 @@
-﻿using CleanArch.Domain.Account;
+﻿using CleanArch.WebUI.Domain.Services.Interfaces;
 using CleanArch.WebUI.Models;
 using Microsoft.AspNetCore.Mvc;
 

@@ -1,4 +1,4 @@
-﻿namespace CleanArch.Domain.Account;
+﻿namespace CleanArch.WebUI.Domain.Services.Interfaces;
 
 public interface IAuthenticate
 {

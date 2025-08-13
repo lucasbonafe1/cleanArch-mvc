@@ -1,6 +1,7 @@
 using CleanArch.Application.Interfaces;
 using CleanArch.Application.Products.Handlers;
 using CleanArch.Application.Services;
+using CleanArch.Domain.Account;
 using CleanArch.Domain.Interfaces;
 using CleanArch.Infra.Data.Context;
 using CleanArch.Infra.Data.Identity;
@@ -17,7 +18,6 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-
 builder.Services.AddDbContext<AppDbContext>(options =>
                         options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
                             b => b.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName)));
@@ -33,6 +33,8 @@ builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 
+builder.Services.AddScoped<ISeedUserRoleInitial, SeedUserRoleInitial>();
+
 builder.Services.AddMediatR(typeof(GetProductsQueryHandler).Assembly);
 
 var app = builder.Build();
@@ -42,6 +44,13 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+}
+
+using (var scope = app.Services.CreateScope())
+{
+    var seedUserRoleInitial = scope.ServiceProvider.GetRequiredService<ISeedUserRoleInitial>();
+    seedUserRoleInitial.SeedRoles();
+    seedUserRoleInitial.SeedUsers();
 }
 
 app.UseAuthorization();
